@@ -1,6 +1,6 @@
 
 (restas:define-module #:serve.paren-restas
-  (:use :cl :split-sequence :alexandria :serve.paren)
+  (:use :cl :split-sequence :alexandria :serve.paren :restas)
   (:export #:*parenscript-ending*
            #:*route-prefix*))
 
