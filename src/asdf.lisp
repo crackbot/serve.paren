@@ -10,13 +10,12 @@
 ;; components and asdf system
 
 (defun system-ps-files (system)
-  "Returns parenscript files found in asdf system Returns parenscript
-   components in system, parenscript component is defined by
-   paren-asdf package, and has a class of asdf:parenscript-file."
+  "Returns parenscript and javascript files found in asdf system."
   (mapcar #'(lambda (component)
               (serve.paren::extract-subpath (asdf:system-source-directory system)
                                             (asdf:component-pathname component)))
-          (find-components (find-class 'asdf::parenscript-file) system)))
+          (append (find-components (find-class 'asdf::parenscript-file) system)
+                  (find-components (find-class 'asdf::javascript-file) system))))
 
 (defun find-components (class system)
   "Returns components by traversing system which are of a class."
@@ -53,9 +52,9 @@
       (read-sequence string strm)
       string)))
 
-;;; a parenscript file is a source file:
-;;; A source file is any file that the system does not know how to generate
-;;; from other components of the system.
+;;; A parenscript file is a source file. A source file is any file
+;;; that the system does not know how to generate from other
+;;; components of the system.
 (defclass asdf::parenscript-file (asdf:source-file)
   ())
 
@@ -199,5 +198,4 @@ a specified output stream."
 ;		:output-to-stream t
 		:output-stream output-stream
 		:comp-env comp-env
-		:force-p t
-		))
+		:force-p t))

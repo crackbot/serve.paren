@@ -28,15 +28,12 @@ which one to use mostly depends on your taste and usecase."
 
 ;; Define
 
-(defun defpssyslib (libname system-name &key
-                                 package
-                                 system-source-dir
-                                 (file-match-fn #'match-ps-file)
-                                 (cls 'pslib))
+(defun defpssyslib (libname system-name &key package
+                                         (file-match-fn #'match-ps-file)
+                                         (cls 'pslib))
   "Define new parenscript library from asdf system."
   (let* ((system (asdf:find-system system-name))
-         (source-dir (or system-source-dir
-                         (asdf:system-source-directory system)))
+         (source-dir (asdf:system-source-directory system))
          (lib (make-instance cls
                              :name libname
                              :paren-source-dir source-dir
@@ -73,16 +70,20 @@ of :system-source-dir
 
 If :paren-source-dir key is provided it walks recursively through
 directory looking for any files with *PS-EXT* extension.
-If :inlcude-js option is set then it will also grab *JS-EXT* files.
+
+When :inlcude-js option is set then it will also grab files ending
+with *JS-EXT* extension.
+
 If :watch-changes options is set then it will look for changes
-inside :paren-source-dir
+inside :paren-source-dir (not implemented yet)
 
 Use :package to set package when compiling parenscript library.
 
 With :runtime key you can specify parenscript forms that can be
 included in the lib directly \(without use of files\).
+
 :file-match-fn lets you control how files are matched when compiling
-the library, look at match-file."
+the library, look at \(function match-file\)"
   ;; [TODO] check that paren-source-dir & files are children of
   ;; system-source-dir
   ;; [TODO] move some of it into initialize-instance :after method
@@ -132,6 +133,10 @@ the library, look at match-file."
     (if (pathnamep output)
         (write-file output res)
         res)))
+
+(defun compile-pslibs (libs &key output minify)
+  "Compile the list of ps libs"
+  )
 
 (defun compile-psfile (lib filename &key package output minify)
   (let ((*package* (or package

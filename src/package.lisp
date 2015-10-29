@@ -3,6 +3,7 @@
   (:use :cl :split-sequence :alexandria :mgl-pax)
   (:nicknames "serve")
   (:export :defpslib
+           :defpssyslib
            
            :compile-pslib
            :compile-psfile
